@@ -21,6 +21,8 @@ namespace TicketZ
 
         public App()
         {
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console()
                 .WriteTo.File(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "TicketZ/Log", "logs.txt"))
@@ -69,22 +71,24 @@ namespace TicketZ
                     );
 
                 conn.Open();
-                using NpgsqlCommand existsCommand = new("SELECT EXISTS ( SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND TABLE_NAME ilike 'TicketZ')", conn);
+                
+                Dictionary<string, string> Tables = new Dictionary<string, string>() {
+                    {"TicketZ", "CREATE TABLE TicketZ (id SERIAL PRIMARY KEY,cashier TEXT,advance_amount NUMERIC,amount_received NUMERIC, manual_openings INTEGER, starttime TIMESTAMP, endtime TIMESTAMP, lost_tickets INTEGER, parked_cars INTEGER)" },
+                    {"LostTickets", "CREATE TABLE LostTickets (id SERIAL PRIMARY KEY, cashier TEXT, issuedAT TIMESTAMP, days integer default 1)" }
+                };
 
-                bool? tableExists = existsCommand.ExecuteScalar() as bool?;
-
-                if (tableExists == null || tableExists == false)
+                foreach(KeyValuePair<string, string> table in Tables)
                 {
-                    Log.Logger.Information("Table TicktZ Not found, initializing...");
-                    using NpgsqlCommand createCmd = new(
-                           "CREATE TABLE TicketZ (id SERIAL PRIMARY KEY,cashier TEXT,advance_amount NUMERIC,amount_received NUMERIC, manual_openings INTEGER, starttime TIMESTAMP, endtime TIMESTAMP, lost_tickets INTEGER, parked_cars INTEGER)",
-                           conn
-                           );
+                    NpgsqlCommand existstCmd = new($"SELECT EXISTS ( SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND TABLE_NAME ilike '{table.Key}')", conn);
+                    bool? tableExists = existstCmd.ExecuteScalar() as bool?;
 
-                    createCmd.ExecuteNonQuery();
-                    Log.Logger.Information("Table TicktZ created");
+                    if(tableExists == null || tableExists == false) {
+                        Log.Logger.Information("Table {table_name} was not found.", table.Key);
+                        NpgsqlCommand createCmd = new (table.Value, conn);
+                        createCmd.ExecuteNonQuery();
+                        Log.Logger.Information("Table {table_name} created successfully", table.Key);
+                    }
                 }
-
                 _serviceProvider.GetRequiredService<IRouter>().Push<HomeViewModel>();
 
             }

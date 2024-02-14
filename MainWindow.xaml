@@ -10,6 +10,7 @@
     Background="{StaticResource Slate300}"
     Title="MainWindow" 
     ResizeMode="CanMinimize"
+    WindowState="Maximized"
     Height="700"
     Width="1100">
     <Grid>
@@ -70,6 +71,11 @@
                                                     </Border.Background>
                                                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                                         <TextBlock HorizontalAlignment="Center" FontWeight="ExtraBold" FontSize="48" FontStyle="Oblique">TICKET-Z</TextBlock>
+                                                        <TextBlock Padding="0,15" Margin="0,15" FontSize="18" FontWeight="Normal" MaxWidth="800" TextAlignment="Center" TextWrapping="Wrap">
+                                                            Ticket-Z by Friends Equipment is your go-to app for effortless ticket monitoring and management.
+                                                            Track issued tickets, reprint with ease, and access vital data on advance amounts, total income, lost parking tickets, and parked cars. 
+                                                            Simplify your operations with Ticket-Z today!
+                                                        </TextBlock>
                                                         <TextBlock HorizontalAlignment="Center" FontWeight="DemiBold" FontSize="16" >version 1.0.0</TextBlock>
                                                     </StackPanel>
                                                 </Border>

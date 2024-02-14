@@ -20,9 +20,10 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0">Previous</Button>
-                <TextBox Margin="10,0" VerticalAlignment="Center" Grid.Column="1" Text="{Binding CashierName}" />
-                <Button Grid.Column="2">Next</Button>
+                <DatePicker BorderThickness="0" Grid.Column="0" SelectedDate="{Binding StartTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Margin="10,0" VerticalAlignment="Center" Grid.Column="1" Text="{Binding CashierName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <DatePicker BorderThickness="0" Grid.Column="2" SelectedDate="{Binding EndTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
             </Grid>
         </Border>
 
@@ -59,6 +60,10 @@
                         
                         <DataGridTextColumn Header="Mantant Encaisse" CanUserResize="False" Width="Auto"
                             Binding="{Binding AmountReceived, StringFormat='\{0} dh', Mode=OneWay}" />
+
+                        <DataGridTextColumn Header="Ticket Perdu" CanUserResize="False" Width="Auto"
+                            Binding="{Binding LostTickets, StringFormat='\{0} dh', Mode=OneWay}" />
+
 
                         <DataGridTextColumn Header="Mantant Total" CanUserResize="False" Width="Auto"
                             Binding="{Binding Total, StringFormat='\{0} dh', Mode=OneWay}" />

@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO.Compression;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Threading;
 using TicketZ.Core;
@@ -9,7 +10,7 @@ using TicketZ.Repositories;
 
 namespace TicketZ.MVVM.ViewModel
 {
-    public class HomeViewModel : Core.ViewModel, IDisposable
+    public partial class HomeViewModel : Core.ViewModel, IDisposable
     {
         private readonly ShiftRepository _shfitRepository;
         private ObservableCollection<Shift> _shifts;
@@ -25,6 +26,7 @@ namespace TicketZ.MVVM.ViewModel
 
         public ICollectionView ShiftsCollectionView { get; }
 
+        
         private string _cahsierName;
         public string CashierName
         {
@@ -39,6 +41,7 @@ namespace TicketZ.MVVM.ViewModel
         }
 
         private int _page = 1;
+
         public int Page
         {
             get { return _page; }
@@ -50,12 +53,40 @@ namespace TicketZ.MVVM.ViewModel
             }
         }
 
+        private DateTime _startTime;
+        public DateTime StartTime { 
+            get { return _startTime; } 
+            set
+            {
+                if(value == _startTime || value > _endTime) return;
+                _startTime = value;
+                OnPropertyChanged();
+                ShiftsCollectionView.Refresh();
+
+            }
+        }
+
+        private DateTime _endTime = DateTime.MaxValue;
+        public DateTime EndTime
+        {
+            get { return _endTime; }
+            set
+            {
+                if (value == _startTime || value < _startTime) return;
+                _endTime = value;
+                OnPropertyChanged();
+                ShiftsCollectionView.Refresh();
+            }
+        }
+
+
         public RelayCommand GetNextPage {  get; set; }
 
         public HomeViewModel(ShiftRepository repository)
         {
             _shifts = new();
             _cahsierName = string.Empty;
+          
             _shfitRepository = repository;
 
             _shfitRepository.OnShiftsRetrived += UpdateShiftCollection;
@@ -69,13 +100,14 @@ namespace TicketZ.MVVM.ViewModel
             ShiftsCollectionView = CollectionViewSource.GetDefaultView(_shifts);
             ShiftsCollectionView.Filter = Filter;
 
-            _shfitRepository.RetreiveShifts(1);
             Task.Run(() =>
             {
-                Dispatcher.CurrentDispatcher.Invoke(() =>
-                    {
-                    }
-                );
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+
+                    _shfitRepository.RetreiveShifts(1);
+                });
+                    
             });
         }
 
@@ -93,7 +125,7 @@ namespace TicketZ.MVVM.ViewModel
         {
             if (@object is Shift shift)
             {
-                return shift.Cashier.Contains(CashierName, StringComparison.InvariantCultureIgnoreCase);
+                return shift.Cashier.Contains(CashierName, StringComparison.InvariantCultureIgnoreCase) && shift.StartTime >= StartTime && shift.EndTime <= EndTime;
             }
             return false;
         }
