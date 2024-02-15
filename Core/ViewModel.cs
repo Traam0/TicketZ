@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TicketZ.Core
 {
-    public class ViewModel: ObservableObject
+    public sealed class ViewModel: ObservableObject
     {
 
     }
