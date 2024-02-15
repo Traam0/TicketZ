@@ -42,7 +42,7 @@ namespace TicketZ
             });
 
             services.AddSingleton<HomeViewModel>();
-            services.AddSingleton<SettingsViewModel>();
+            //services.AddSingleton<SettingsViewModel>();
 
             _serviceProvider = services.BuildServiceProvider();
 

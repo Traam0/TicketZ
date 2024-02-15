@@ -29,8 +29,8 @@
                     <Button Command="{Binding GoBackCommand}" Background="{x:Static SystemParameters.WindowGlassBrush}" Foreground="White"
                         Margin="5,0,5,0" Content="Back" />
                     <Button Command="{Binding GoToHomeCommand}" Margin="0,0,5,0" Content="Home" />
-                    <Button Command="{Binding GoToSettingsCommand}" Margin="5,0,5,0"
-                        Content="Settings" />
+                    <!--<Button Command="{Binding GoToSettingsCommand}" Margin="5,0,5,0"
+                        Content="Settings" />-->
                 </StackPanel>
 
                 <!--<Button
@@ -47,9 +47,9 @@
                     <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
                         <views:Home />
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
+                    <!--<DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
                         <views:Settings />
-                    </DataTemplate>
+                    </DataTemplate>-->
 
                 </Grid.Resources>
                 <ContentControl FocusVisualStyle="{x:Null}" Content="{Binding Router.CurrentView}">
